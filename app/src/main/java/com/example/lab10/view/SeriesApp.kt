@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -22,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -67,8 +67,8 @@ fun BotonFAB(navController: NavHostController) {
     val rutaActual = cbeState?.destination?.route
     if (rutaActual == "series") {
         FloatingActionButton(
-            containerColor = Color.Magenta,
-            contentColor = Color.White,
+            containerColor = MaterialTheme.colorScheme.tertiary,
+            contentColor = MaterialTheme.colorScheme.onTertiary,
             onClick = { navController.navigate("serieNuevo") }
         ) {
             Icon(imageVector = Icons.Filled.Add, contentDescription = "Agregar")
@@ -83,7 +83,7 @@ fun BarraSuperior() {
         title = {
             Text(
                 text = "SERIES APP",
-                color = Color.White,
+                color = MaterialTheme.colorScheme.onPrimary,
                 fontWeight = FontWeight.Bold
             )
         },
@@ -93,24 +93,34 @@ fun BarraSuperior() {
     )
 }
 
-// Barra inferior con las opciones Inicio y Series
+// Barra inferior con las opciones Inicio y Series.
+// Usa los colores del tema para que los íconos se distingan en modo claro y oscuro.
 @Composable
 fun BarraInferior(navController: NavHostController) {
     val cbeState by navController.currentBackStackEntryAsState()
     val rutaActual = cbeState?.destination?.route
+    val colores = NavigationBarItemDefaults.colors(
+        selectedIconColor = MaterialTheme.colorScheme.onPrimary,
+        selectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        indicatorColor = MaterialTheme.colorScheme.primary,
+        unselectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        unselectedTextColor = MaterialTheme.colorScheme.onPrimaryContainer
+    )
     NavigationBar(
-        containerColor = Color.LightGray
+        containerColor = MaterialTheme.colorScheme.primaryContainer
     ) {
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.Home, contentDescription = "Inicio") },
             label = { Text("Inicio") },
             selected = rutaActual == "inicio",
+            colors = colores,
             onClick = { navController.navigate("inicio") { launchSingleTop = true } }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Outlined.Favorite, contentDescription = "Series") },
             label = { Text("Series") },
             selected = rutaActual == "series",
+            colors = colores,
             onClick = { navController.navigate("series") { launchSingleTop = true } }
         )
     }
